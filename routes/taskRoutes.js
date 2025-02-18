@@ -3,6 +3,7 @@ const Task = require('../models/Task');
 const User = require('../models/User');
 const mongoose = require("mongoose");
 const {ObjectId} = require("mongodb");
+require('dotenv').config();
 const router = express.Router();
 
 mongoose.connect(process.env.MONGO_URI)
