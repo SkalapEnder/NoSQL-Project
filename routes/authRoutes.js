@@ -2,6 +2,7 @@ const express = require('express');
 const User = require('../models/User');
 const Task = require('../models/Task');
 const mongoose = require("mongoose");
+require('dotenv').config();
 const router = express.Router();
 const adminCode = 'admin1243'
 
