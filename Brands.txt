@@ -1,0 +1,35 @@
+require("dotenv").config();
+const mongoose = require("mongoose");
+const Category = require("../models/Category");
+
+// MongoDB Connection
+const MONGO_URI = process.env.MONGO_URI;
+mongoose.connect(MONGO_URI)
+    .then(() => console.log("✅ Connected to MongoDB Atlas"))
+    .catch(err => console.error("❌ MongoDB Connection Error:", err));
+
+
+// Brand Data
+const tvCategories = [
+    { category_id: 1, category_name: "LED", category_description: "LED TVs use LED backlighting to illuminate an LCD panel. They offer energy efficiency and good brightness levels." },
+    { category_id: 2, category_name: "OLED", category_description: "OLED TVs use self-emissive pixels that provide true blacks, infinite contrast, and vibrant colors. They are ideal for high-end picture quality." },
+    { category_id: 3, category_name: "QLED", category_description: "QLED TVs use Quantum Dot technology with LED backlighting to enhance color accuracy and brightness. They are a premium alternative to standard LED TVs." },
+    { category_id: 4, category_name: "Direct LED", category_description: "Direct LED TVs have LEDs placed directly behind the screen, providing more uniform brightness and better contrast than edge-lit LED models." }
+];
+
+// Insert Data into MongoDB
+async function insertBrands() {
+    try {
+        await Category.deleteMany({}); // Clear existing brand data
+        console.log("🗑️ Old brand data removed.");
+
+        await Category.insertMany(tvCategories);
+        console.log("✅ TV brands inserted successfully!");
+
+    } catch (error) {
+        console.error("❌ Error inserting brands:", error);
+    }
+}
+
+// Run Function
+insertBrands();

@@ -1,8 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const methodOverride = require("method-override");
 const authRouter = require('./routes/authRoutes');
-
+const productRouter = require('./routes/productRoutes');
+const cartRouter = require('./routes/cartRoutes');
+const brandRouter = require('./routes/brandRoutes');
+const categoryRouter = require('./routes/categoryRoutes');
 const app = express();
 const PORT = 3000;
 
@@ -18,7 +22,7 @@ app.use(session({
     saveUninitialized: true,
     cookie: { maxAge: 1000 * 60 * 60 }
 }));
-
+app.use(methodOverride("_method"));
 app.use((req, res, next) => {
     res.locals.isLoggedIn = req.session.isLoggedIn || false;
     res.locals.username = req.session.username || 'Guest';
@@ -28,7 +32,11 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => res.render('index'))
 
 // Routes
-app.use('/', authRouter);
+app.use('/auth', authRouter);
+app.use('/cart', cartRouter);
+app.use("/brands", brandRouter);
+app.use("/categories", categoryRouter);
+app.use("/products", productRouter);
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
 
