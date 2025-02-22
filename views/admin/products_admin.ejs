@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background-color: #dbdbdb;
+        }
+        /* Adjust column width */
+        .diagonal-column, .available-column, .price-column {
+            min-width: 60px;
+            text-align: center;
+        }
+
+        /* Ensure other columns take more space */
+        .name-column, .description-column {
+            width: 300px;
+        }
+
+        .name-column textarea, .description-column textarea {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<%- include('../templates/navbar'); %>
+
+<div class="container bg-white shadow rounded w-50 mt-3 text-center p-5">
+    <h1>Product Management</h1>
+    <form action="/products/admin" method="POST" class="mt-3">
+        <div class="d-flex justify-content-center">
+            <div class="form-floating mb-3 me-3 w-50 mx-auto">
+                <input type="number" class="form-control" id="product_id" placeholder="Product ID" value="1" min="1" name="product_id" required>
+                <label for="product_id">Product ID</label>
+            </div>
+
+            <!-- Product Name -->
+            <div class="form-floating mb-3 me-3 w-50 mx-auto">
+                <input type="text" class="form-control" id="name" placeholder="Product Name" name="name" required>
+                <label for="name">Product Name</label>
+            </div>
+
+            <!-- Model -->
+            <div class="form-floating mb-3 me-3 w-50 mx-auto">
+                <input type="text" class="form-control" id="model" placeholder="Model" name="model" required>
+                <label for="model">Model</label>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <!-- Description -->
+            <div class="form-floating mb-3 me-3 w-100">
+                <textarea class="form-control" id="description" placeholder="Description" name="description" required></textarea>
+                <label for="description">Description</label>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <!-- Price -->
+            <div class="form-floating mb-3 me-3 w-25">
+                <input type="number" class="form-control" id="price" placeholder="Price" name="price" required>
+                <label for="price">Price (KZT)</label>
+            </div>
+
+            <!-- Available Quantity -->
+            <div class="form-floating mb-3 me-3 w-25">
+                <input type="number" class="form-control" id="available" placeholder="Available Quantity" name="available" required>
+                <label for="available">Available Quantity</label>
+            </div>
+
+            <!-- Diagonal (if applicable) -->
+            <div class="form-floating mb-3 me-3 w-25">
+                <input type="text" class="form-control" id="diagonal" placeholder="Diagonal" name="diagonal">
+                <label for="diagonal">Diagonal (inches)</label>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <!-- Brand Selection -->
+            <div class="form-floating mb-3 me-3 w-50 mx-auto">
+                <select class="form-select" id="brand" name="brand" required>
+                    <option value="" disabled selected>Select a Brand</option>
+                    <% brands.forEach(brand => { %>
+                        <option value="<%= brand.brand_id %>"><%= brand.brand_name %></option>
+                    <% }) %>
+                </select>
+                <label for="brand">Brand</label>
+            </div>
+
+            <!-- Category Selection -->
+            <div class="form-floating mb-3 me-3 w-50 mx-auto">
+                <select class="form-select" id="category" name="category" required>
+                    <option value="" disabled selected>Select a Category</option>
+                    <% categories.forEach(category => { %>
+                        <option value="<%= category.category_id %>"><%= category.category_name %></option>
+                    <% }) %>
+                </select>
+                <label for="category">Category</label>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <!-- Image URL Inputs -->
+            <div class="form-floating mb-3 me-3 w-50">
+                <input type="text" class="form-control" id="image1" placeholder="Image URL 1" name="pictures[]" required>
+                <label for="image1">Image URL 1</label>
+            </div>
+            <div class="form-floating mb-3 me-3 w-50">
+                <input type="text" class="form-control" id="image2" placeholder="Image URL 2" name="pictures[]">
+                <label for="image2">Image URL 2</label>
+            </div>
+            <div class="form-floating mb-3 me-3 w-50">
+                <input type="text" class="form-control" id="image3" placeholder="Image URL 3" name="pictures[]">
+                <label for="image3">Image URL 3</label>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <div class="form-floating mb-3 me-3 w-50 mx-auto">
+                <input type="text" class="form-control" id="url" placeholder="URL" name="url">
+                <label for="url">URL link</label>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-outline-success">Add Product</button>
+    </form>
+</div>
+
+<div class="container-fluid bg-white shadow rounded my-5 text-center p-5">
+    <h2>Products:</h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Product ID</th>
+            <th>Name</th>
+            <th>Model</th>
+            <th>Description</th>
+            <th>Diagonal</th>
+            <th>Price (KZT)</th>
+            <th>Available</th>
+            <th>Brand</th>
+            <th>Category</th>
+            <th>Link</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% products.forEach(product => { %>
+            <tr data-product-id="<%= product.product_id%>">
+                <td><%= product.product_id %></td>
+                <td><textarea class="form-control name-column product-name"><%= product.name %></textarea></td>
+                <td><input type="text" class="form-control product-model" value="<%= product.model %>"></td>
+                <td><textarea class="form-control description-column product-description"><%= product.description %></textarea></td>
+                <td><input type="text" class="form-control diagonal-column product-diagonal" value="<%= product.diagonal %>"></td>
+                <td><input type="text" class="form-control price-column product-price" value="<%= product.price %>"></td>
+                <td><input type="number" class="form-control available-column product-quantity" value="<%= product.quantity %>"></td>
+                <td><%= product.brand.name %></td>
+                <td><%= product.category.name %></td>
+                <td><a href="<%= product.url %>">Link</a></td>
+                <td>
+                    <button class="btn btn-success btn-sm" onclick="updateProduct('<%= product.product_id %>')">Update</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteProduct('<%= product.product_id %>')">Delete</button>
+                </td>
+            </tr>
+        <% }) %>
+        </tbody>
+    </table>
+</div>
+
+<%- include('../templates/footer'); %>
+
+</body>
+<script>
+    async function updateProduct(productId) {
+        try {
+            const productRow = document.querySelector(`[data-product-id="${productId}"]`);
+
+            const name = productRow.querySelector('.product-name').value;
+            const model = productRow.querySelector('.product-model').value;
+            const description = productRow.querySelector('.product-description').value;
+            const diagonal = productRow.querySelector('.product-diagonal').value;
+            const price = productRow.querySelector('.product-price').value;
+            const quantity = productRow.querySelector('.product-quantity').value;
+
+            const response = await fetch(`/products/admin/${productId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, model, price, quantity, description, diagonal}),
+            });
+
+            if (response.ok) {
+                alert('Product updated successfully!');
+                window.location.reload();
+            } else {
+                console.error('Failed to update product');
+                alert('Error updating product: Response is NOT OK' + response.statusText);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error updating product: ' + error);
+        }
+    }
+
+    async function deleteProduct(productId) {
+        try {
+            const response = await fetch(`/products/admin/${productId}`, { method: 'DELETE' });
+
+            if (response.ok) {
+                alert('Product deleted successfully');
+                window.location.reload();
+            } else {
+                alert('Error deleting product');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Error deleting product');
+        }
+    }
+</script>
+</html>

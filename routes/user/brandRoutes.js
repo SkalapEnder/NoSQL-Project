@@ -1,12 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Brand = require('../models/Brand');
-const mongoose = require("mongoose");
-require('dotenv').config();
-
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('Brand: Connected to MongoDB Atlas'))
-    .catch((err) => console.error('Error connecting to MongoDB Atlas:', err));
+const Brand = require('../../models/Brand');
 
 // Get all brands
 router.get("/", async (req, res) => {

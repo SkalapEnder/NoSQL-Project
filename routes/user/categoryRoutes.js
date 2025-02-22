@@ -1,12 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Category = require("../models/category");
-const mongoose = require("mongoose");
-require('dotenv').config();
-
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('Category: Connected to MongoDB Atlas'))
-    .catch((err) => console.error('Error connecting to MongoDB Atlas:', err));
+const Category = require("../../models/Category");
 
 // Get all categories
 router.get("/", async (req, res) => {

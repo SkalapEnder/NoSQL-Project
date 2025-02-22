@@ -56,7 +56,7 @@ async function extractTVProducts(xmlData) {
                 model: offer.vendorCode || "Unknown Model",
                 price: parseInt(offer.price),
                 currency: offer.currencyId,
-                quantity: offer.$.available === "true" ? 10 : 0,
+                quantity: offer.$.available === "true" ? Math.floor(Math.random() * (200 - 20 + 1) + 20) : 0,
                 diagonal: extractDiagonal(offer.name, offer.vendorCode),
                 description: offer.description?.trim() || "",
                 url: offer.url || "",
@@ -122,6 +122,7 @@ async function updateDailyTVProducts() {
 
     await Product.insertMany(tvProducts);
     console.log(`✅ Inserted ${tvProducts.length} TV products into MongoDB.`);
+    return;
 }
 
 async function getBrand(brandName) {
@@ -167,7 +168,4 @@ async function getTVType(url) {
     }
 }
 
-// **Self-Executing Function**
-(async () => {
-    await updateDailyTVProducts();
-})();
+module.exports = { updateDailyTVProducts };

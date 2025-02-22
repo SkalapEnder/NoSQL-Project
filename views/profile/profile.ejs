@@ -12,9 +12,9 @@
     </style>
 </head>
 <body>
-<%- include('templates/navbar'); %>
+<%- include('../templates/navbar'); %>
 
-<div class="container bg-white shadow rounded w-50 mt-4 text-center p-5 pb-4">
+<div class="container bg-white shadow rounded w-50 my-4 text-center p-5 pb-4">
     <h1>Profile Page</h1>
     <div class="profile-image">
         <img src="https://eu.ui-avatars.com/api/?name=<%= user.username %>&size=150" class="rounded-circle" alt="Profile Picture" />
@@ -22,7 +22,7 @@
 
     <div class="justify-content-center mt-4">
         <div>
-            <h3>User ID: <%= user.user_id %></h3>
+            <h3>User ID: <%= user._id %></h3>
             <h3>Name: <%= user.username %></h3>
             <h3>Email: <%= user.email %></h3>
             <h3>Role: <%= capitalizeFirstLetter(user.role) %></h3>
@@ -36,18 +36,48 @@
     </div>
 
     <div class="mt-4 mx-auto">
-        <form action="/update" method="GET" style="display: inline;">
-            <button type="submit" class="btn btn-outline-success fs-5">Update User</button>
-        </form>
-        <form action="/logout" method="GET" style="display: inline;">
-            <button type="submit" class="btn btn-outline-secondary fs-5">Log Out</button>
-        </form>
-        <form action="/delete-account" method="POST" style="display: inline;">
-            <button type="submit" class="btn btn-outline-danger fs-5">Delete Account</button>
-        </form>
+        <% if (user.role === 'admin') {%>
+            <div class="mt-4 mx-auto">
+                <form action="/products/admin" method="GET" style="display: inline;">
+                    <button type="submit" class="btn btn-outline-primary fs-5">Product Management</button>
+                </form>
+                <form action="/brands/admin" method="GET" style="display: inline;">
+                    <button type="submit" class="btn btn-outline-primary fs-5">Brand Management</button>
+                </form>
+                <form action="/categories/admin" method="GET" style="display: inline;">
+                    <button type="submit" class="btn btn-outline-primary fs-5">Category Management</button>
+                </form>
+            </div>
+
+            <div class="mt-4 mx-auto">
+                <form action="/users/admin" method="GET" style="display: inline;">
+                    <button type="submit" class="btn btn-outline-primary fs-5">User Management</button>
+                </form>
+<!--                <form action="/mongo" method="GET" style="display: inline;">-->
+<!--                    <button type="submit" class="btn btn-outline-primary fs-5">Console</button>-->
+<!--                </form>-->
+                <form action="/products/admin/scrape" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-outline-primary fs-5">Scrap Data</button>
+                </form>
+            </div>
+        <% } %>
+
+        <div class="mt-4 mx-auto">
+            <form action="/auth/update" method="GET" style="display: inline;">
+                <button type="submit" class="btn btn-success fs-5">Update User</button>
+            </form>
+            <form action="/auth/logout" method="GET" style="display: inline;">
+                <button type="submit" class="btn btn-secondary fs-5">Log Out</button>
+            </form>
+            <form action="/auth/delete-account" method="POST" style="display: inline;">
+                <button type="submit" class="btn btn-outline-danger fs-5">Delete Account</button>
+            </form>
+        </div>
     </div>
 </div>
 
-<%- include('templates/footer'); %>
+<div class="py-2 text-center fs-5 text-white bg-dark">
+    <h4>Alisher Berik | IT-2308</h4>
+</div>
 </body>
 </html>

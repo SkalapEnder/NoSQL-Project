@@ -12,11 +12,11 @@
     </style>
 </head>
 <body>
-<%- include('templates/navbar'); %>
+<%- include('../templates/navbar'); %>
 
 <div class="container bg-white shadow rounded w-50 mt-4 p-5 pb-4">
     <h1 class="text-center">Update Page</h1>
-    <form action="/update" method="POST">
+    <form action="/auth/update" method="POST">
         <input type="hidden" name="user_id" value="<%= user.user_id %>" />
 
         <div class="w-50 mx-auto mt-4">
@@ -50,7 +50,7 @@
 
 </div>
 
-<%- include('templates/footer'); %>
+<%- include('../templates/footer'); %>
 </body>
 <script>
     function toggleSecretCode() {

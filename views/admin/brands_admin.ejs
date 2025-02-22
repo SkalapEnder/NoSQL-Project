@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Brand Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background-color: #dbdbdb;
+        }
+    </style>
+</head>
+<body>
+<%- include('../templates/navbar'); %>
+
+<div class="container bg-white my-5 text-center p-5 rounded">
+    <h2 class="mb-4">Add a New Brand</h2>
+
+    <!-- Brand Creation Form -->
+    <form action="/brands/admin" method="POST" class="w-50 mx-auto">
+        <div class="mb-3">
+            <label for="brand_id" class="form-label">Brand ID</label>
+            <input type="number" id="brand_id" name="brand_id" class="form-control" placeholder="Enter brand ID" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="brand_name" class="form-label">Brand Name</label>
+            <input type="text" id="brand_name" name="name" class="form-control" placeholder="Enter brand name" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="brand_description" class="form-label">Description</label>
+            <textarea id="brand_description" name="description" class="form-control" placeholder="Enter brand description"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="headquarters" class="form-label">Headquarters</label>
+            <input type="text" id="headquarters" name="headquarters" class="form-control" placeholder="Enter headquarters location">
+        </div>
+
+        <div class="mb-3">
+            <label for="founded_year" class="form-label">Founded Year</label>
+            <input type="number" id="founded_year" name="founded_year" class="form-control" placeholder="Enter founded year">
+        </div>
+
+        <div class="mb-3">
+            <label for="website" class="form-label">Website</label>
+            <input type="url" id="website" name="website" class="form-control" placeholder="Enter brand website URL">
+        </div>
+
+        <button type="submit" class="btn btn-success">Create Brand</button>
+    </form>
+</div>
+
+
+<div class="container bg-white my-5 text-center p-5 rounded">
+    <h2 class="mb-4">Brand Management</h2>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>Brand ID</th>
+            <th>Brand Name</th>
+            <th>Description</th>
+            <th>Headquarters</th>
+            <th>Founded</th>
+            <th>Website</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% brands.forEach((brand) => { %>
+            <tr data-brand-id="<%= brand.brand_id %>">
+                <td><%= brand.brand_id %></td>
+                <td><input type="text" class="form-control brand-name" value="<%= brand.brand_name %>"></td>
+                <td><textarea class="form-control brand-description"><%= brand.brand_description %></textarea></td>
+                <td><input type="text" class="form-control brand-headquarters" value="<%= brand.headquarters %>"></td>
+                <td><input type="number" class="form-control brand-founded" value="<%= brand.founded_year %>"></td>
+                <td><input type="text" class="form-control brand-website" value="<%= brand.website %>"></td>
+                <td>
+                    <button class="btn btn-warning" onclick="updateBrand('<%= brand.brand_id %>')">Update</button>
+                    <button class="btn btn-danger" onclick="deleteBrand('<%= brand.brand_id %>')">Delete</button>
+                </td>
+            </tr>
+        <% }) %>
+        </tbody>
+    </table>
+</div>
+
+<%- include('../templates/footer'); %>
+</body>
+<script>
+    async function updateBrand(brandId) {
+        const row = document.querySelector(`tr[data-brand-id='${brandId}']`);
+        const name = row.querySelector(".brand-name").value;
+        const description = row.querySelector(".brand-description").value;
+        const headquarters = row.querySelector(".brand-headquarters").value;
+        const website = row.querySelector(".brand-website").value; // Updated to use input field
+        const founded_year = row.querySelector(".brand-founded").value;
+
+        try {
+            const response = await fetch(`/brands/admin/${brandId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ brand_id: brandId, name, description, headquarters, founded_year, website }),
+            });
+
+            if (response.ok) {
+                alert("Brand updated successfully!");
+                window.location.reload();
+            } else {
+                const errorData = await response.json();
+                alert(`Failed to update brand: ${errorData.error || response.status}`);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+
+    async function deleteBrand(brandId) {
+        if (!confirm("Are you sure you want to delete this brand?")) return;
+
+        try {
+            const response = await fetch(`/brands/admin/${brandId}`, { method: "DELETE" });
+
+            if (response.ok) {
+                alert("Brand deleted successfully!");
+                document.querySelector(`tr[data-brand-id='${brandId}']`).remove();
+            } else {
+                alert("Failed to delete brand.");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+</script>
+</html>
