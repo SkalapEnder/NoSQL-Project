@@ -5,7 +5,7 @@
 
 The Final Project of Advanced Databases (NoSQL).
 
-Project presentation: [Link]()
+Project presentation: [Link](https://www.canva.com/design/DAGaaIXPnLc/tB2iQ9L4YuvMBGXciCFusQ/edit?utm_content=DAGaaIXPnLc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 ## Technical Description
 
@@ -15,11 +15,12 @@ The project database consists of 5 collections:
 2) Categories
 3) Brands
 4) Products (Consist relationships with Category and Brand)
-5) Carts (Many-to-Many Relationship with User)
 
+There you can search TV products, find TV by specific brands, or perform administrative actions (CRUD operations) (Users authentification)
 
+To get admin privilege, create new account and choose role 'Admin', then below appears input for secret code.
 
-
+#### Secret code: admin1243
 
 ## Installation
 Before testing project, write next command in IDE terminal
